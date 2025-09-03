@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة المستحقات العمالية - القانون اليمني</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #27ae60;
+            --warning: #f39c12;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4efe9 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 60%);
+            transform: rotate(30deg);
+        }
+        
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            position: relative;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            width: 100px;
+            height: 100px;
+            line-height: 100px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--secondary), var(--primary));
+        }
+        
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+        }
+        
+        .card-title {
+            color: var(--primary);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light);
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 1.1rem;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 15px 18px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f9f9f9;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--secondary);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.15);
+            background: #fff;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(to right, var(--secondary), var(--primary));
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(to right, #7f8c8d, #95a5a6);
+        }
+        
+        .btn-secondary:hover {
+            box-shadow: 0 8px 20px rgba(149, 165, 166, 0.4);
+        }
+        
+        .result-section {
+            display: none;
+        }
+        
+        .result-box {
+            background: var(--light);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border-right: 5px solid var(--secondary);
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #ddd;
+            font-size: 1.1rem;
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .total {
+            font-weight: bold;
+            font-size: 1.4rem;
+            color: var(--primary);
+            background: rgba(52, 152, 219, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        
+        .whatsapp-btn {
+            background: linear-gradient(to right, #25D366, #128C7E);
+            display: block;
+            width: 100%;
+            text-align: center;
+            padding: 18px;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-top: 25px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+            font-size: 1.1rem;
+        }
+        
+        .whatsapp-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
+        }
+        
+        .info-box {
+            background: #e8f4fc;
+            border-right: 4px solid var(--secondary);
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 8px;
+            font-size: 1.05rem;
+        }
+        
+        .section-toggle {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--primary);
+            transition: all 0.3s ease;
+        }
+        
+        .section-toggle:hover {
+            background: #dfe6e9;
+        }
+        
+        .section-content {
+            display: none;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 30px;
+            color: #777;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .footer-name {
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #eee;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, var(--secondary), var(--primary));
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .card-title {
+                font-size: 1.4rem;
+            }
+            
+            .logo {
+                width: 80px;
+                height: 80px;
+                line-height: 80px;
+                font-size: 2.5rem;
+            }
+        }
+        
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            margin-right: 5px;
+            color: var(--secondary);
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 250px;
+            background-color: var(--dark);
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -125px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.9rem;
+            font-weight: normal;
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .currency-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .currency-btn {
+            padding: 10px 20px;
+            border: 2px solid var(--secondary);
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .currency-btn.active {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .overtime-types {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .overtime-types {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .version-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            backdrop-filter: blur(5px);
+        }
+        
+        .changelog-link {
+            color: #fff;
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(255, 255, 255, 0.5);
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="version-badge">الإصدار 1.1.0</div>
+            <div class="logo">
+                <i class="fas fa-balance-scale"></i>
+            </div>
+            <h1>حاسبة المستحقات العمالية</h1>
+            <p>أداة متخصصة لتحديد حقوقك العمالية وفقاً لقانون العمل اليمني بدقة متناهية</p>
+        </header>
+        
+        <div class="progress-bar">
+            <div class="progress" id="progress-bar"></div>
+        </div>
+        
+        <div class="card" id="input-section">
+            <h2 class="card-title"><i class="fas fa-user-circle"></i> المعلومات الشخصية</h2>
+            
+            <div class="form-group">
+                <label>اختر العملة</label>
+                <div class="currency-selector">
+                    <div class="currency-btn active" data-currency="YER">ريال يمني (YER)</div>
+                    <div class="currency-btn" data-currency="SAR">ريال سعودي (SAR)</div>
+                    <div class="currency-btn" data-currency="USD">دولار أمريكي (USD)</div>
+                </div>
+            </div>
+            
+            <form id="employee-form">
+                <div class="form-group">
+                    <label for="fullname">الاسم الثلاثي</label>
+                    <input type="text" id="fullname" required placeholder="أدخل اسمك الثلاثي الكامل">
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">رقم الهاتف</label>
+                    <input type="tel" id="phone" required placeholder="أدخل رقم هاتفك للتواصل">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">البريد الإلكتروني (اختياري)</label>
+                    <input type="email" id="email" placeholder="أدخل بريدك الإلكتروني">
+                </div>
+                
+                <div class="form-group">
+                    <label for="company">الجهة التي تعمل لديها (اختياري)</label>
+                    <input type="text" id="company" placeholder="أدخل اسم الجهة أو الشركة">
+                </div>
+                
+                <div class="section-toggle" onclick="toggleSection('personal-details')">
+                    <span>معلومات إضافية (اختيارية)</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                
+                <div class="section-content" id="personal-details">
+                    <div class="form-group">
+                        <label for="birthdate">تاريخ الميلاد</label>
+                        <input type="date" id="birthdate">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="job-title">المسمى الوظيفي</label>
+                        <input type="text" id="job-title" placeholder="المسمى الوظيفي أو المهنة">
+                    </div>
+                </div>
+                
+                <h2 class="card-title"><i class="fas fa-briefcase"></i> المعلومات الوظيفية</h2>
+                
+                <div class="form-group">
+                    <label for="start-date">تاريخ بدء العمل</label>
+                    <input type="date" id="start-date" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="end-date">تاريخ انتهاء العمل</label>
+                    <input type="date" id="end-date" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contract-type">نوع العقد</label>
+                    <select id="contract-type" required>
+                        <option value="">اختر نوع العقد</option>
+                        <option value="unlimited">عقد غير محدد المدة</option>
+                        <option value="limited">عقد محدد المدة</option>
+                        <option value="specific">عقد لإنجاز عمل معين</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="end-reason">سبب إنهاء الخدمة</label>
+                    <select id="end-reason" required>
+                        <option value="">اختر سبب إنهاء الخدمة</option>
+                        <option value="employer_termination">إنهاء من صاحب العمل (فصل)</option>
+                        <option value="employer_economic">إنهاء لأسباب اقتصادية</option>
+                        <option value="resign">استقالة</option>
+                        <option value="contract_end">انتهاء مدة العقد</option>
+                        <option value="retirement">بلوغ سن التقاعد</option>
+                        <option value="disability">عجز كلي</option>
+                        <option value="force_majeure">قوة قاهرة</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="termination-reason-group" style="display: none;">
+                    <label for="termination-reason">سبب الفصل من العمل</label>
+                    <select id="termination-reason">
+                        <option value="unjustified">فصل تعسفي (غير مبرر)</option>
+                        <option value="justified">فصل مبرر (بسبب خطأ جسيم)</option>
+                    </select>
+                </div>
+                
+                <h2 class="card-title"><i class="fas fa-money-bill-wave"></i> البيانات المالية</h2>
+                
+                <div class="form-group">
+                    <label for="salary">الراتب الأساسي الأخير (<span class="currency-label">ريال يمني</span>)</label>
+                    <input type="number" id="salary" required placeholder="أدخل الراتب الأساسي">
+                </div>
+                
+                <div class="form-group">
+                    <label for="housing">بدل السكن (<span class="currency-label">ريال يمني</span>)</label>
+                    <input type="number" id="housing" value="0" placeholder="بدل السكن إن وجد">
+                </div>
+                
+                <div class="form-group">
+                    <label for="transport">بدل المواصلات (<span class="currency-label">ريال يمني</span>)</label>
+                    <input type="number" id="transport" value="0" placeholder="بدل المواصلات إن وجد">
+                </div>
+                
+                <div class="form-group">
+                    <label for="other-allowances">بدلات أخرى (<span class="currency-label">ريال يمني</span>)</label>
+                    <input type="number" id="other-allowances" value="0" placeholder="أي بدلات أخرى ثابتة">
+                </div>
+                
+                <div class="section-toggle" onclick="toggleSection('financial-details')">
+                    <span>بيانات الإجازات والمستحقات الأخرى</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                
+                <div class="section-content" id="financial-details">
+                    <div class="form-group">
+                        <label for="vacation-balance">رصيد الإجازات (أيام)</label>
+                        <input type="number" id="vacation-balance" value="0" placeholder="عدد أيام الإجازة المستحقة">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="overtime-hours">ساعات العمل الإضافية</label>
+                        <div class="overtime-types">
+                            <div>
+                                <label for="normal-overtime">في الأيام العادية</label>
+                                <input type="number" id="normal-overtime" value="0" placeholder="عدد الساعات">
+                            </div>
+                            <div>
+                                <label for="holiday-overtime">في العطلات الرسمية</label>
+                                <input type="number" id="holiday-overtime" value="0" placeholder="عدد الساعات">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="notice-period">هل تم إعطاء إشعار قبل إنهاء الخدمة؟</label>
+                        <select id="notice-period">
+                            <option value="no">لا</option>
+                            <option value="yes">نعم</option>
+                            <option value="partial">نعم ولكن غير مكتمل</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="unpaid-salary">الرواتب المتأخرة (<span class="currency-label">ريال يمني</span>)</label>
+                        <input type="number" id="unpaid-salary" value="0" placeholder="المبلغ المستحق من رواتب متأخرة">
+                    </div>
+                </div>
+                
+                <div class="section-toggle" onclick="toggleSection('deductions')">
+                    <span>الخصومات والالتزامات (إن وجدت)</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                
+                <div class="section-content" id="deductions">
+                    <div class="form-group">
+                        <label for="loans">السلف والقروض (<span class="currency-label">ريال يمني</span>)</label>
+                        <input type="number" id="loans" value="0" placeholder="المبلغ المتبقي من السلف أو القروض">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="penalties">الجزاءات المالية (<span class="currency-label">ريال يمني</span>)</label>
+                        <input type="number" id="penalties" value="0" placeholder="أي جزاءات مالية مستحقة">
+                    </div>
+                </div>
+                
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i> 
+                    <span>يتم حساب المستحقات وفقاً لأحكام قانون العمل اليمني رقم (5) لسنة 1995م وتعديلاته. هذه الأداة لأغراض إرشادية وقد تحتاج إلى استشارة قانونية للتأكد من دقة النتائج.</span>
+                </div>
+                
+                <button type="button" id="calculate-btn" class="btn btn-block">
+                    <i class="fas fa-calculator"></i> حساب المستحقات الكاملة
+                </button>
+            </form>
+        </div>
+        
+        <div class="card result-section" id="result-section">
+            <h2 class="card-title"><i class="fas fa-file-invoice-dollar"></i> التقرير المفصل للمستحقات</h2>
+            
+            <div class="result-box">
+                <h3 style="margin-bottom: 15px; color: var(--primary);">ملخص المستحقات</h3>
+                
+                <div class="result-item">
+                    <span>مكافأة نهاية الخدمة:</span>
+                    <span id="reward-amount">0 <span class="currency-label">ريال يمني</span></span>
+                </div>
+                
+                <div class="result-item">
+                    <span>بدل الإجازة السنوية:</span>
+                    <span id="vacation-amount">0 <span class="currency-label">ريال يمني</span></span>
+                </div>
+                
+                <div class="result-item">
+                    <span>أجر مهلة الإخطار:</span>
+                    <span id="notice-amount">0 <span class="currency-label">ريال يمني</span></span>
+                </div>
+                
+                <div class="result-item">
+                    <span>مقابل العمل الإضافي (أيام عادية):</span>
+                    <span id="normal-overtime-amount">0 <span class="currency-label">ريال يمني</span></span>
+                </div>
+                
+                <div class="result-item">
+                    <span>مقابل العمل الإضافي (عطلات):</span>
+                    <span id="holiday-overtime-amount">0 <span class="currency-label">ريال يمني</span></span>
+                </div>
+                
+                <div class="result-item">
+                    <span>الرواتب المتأخرة:</span>
+                    <span id="unpaid-amount">0 <span class="currency-label">ريال يمني</span></span>
+                </div>
+                
+                <div class="result-item">
+                    <span>تعويض الفصل التعسفي:</span>
+                    <span id="compensation-amount">0 <span class="currency-label">ريال يمني</span></span>
+                </div>
+                
+                <div class="result-item total">
+                    <span>إجمالي المستحقات:</span>
+                    <span id="total-amount">0 <span class="currency-label">ريال يمني</span></span>
+                </div>
+                
+                <div class="result-item" style="color: var(--accent);">
+                    <span>إجمالي الخصومات:</span>
+                    <span id="deductions-amount">0 <span class="currency-label">ريال يمني</span></span>
+                </div>
+                
+                <div class="result-item total" style="background: rgba(39, 174, 96, 0.1);">
+                    <span>صافي المبلغ المستحق:</span>
+                    <span id="net-amount">0 <span class="currency-label">ريال يمني</span></span>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <i class="fas fa-lightbulb"></i> 
+                <span>هذا الحساب تقريبي ويستند إلى المعلومات المقدمة. للحصول على حساب دقيق يرجى مراجعة المختصين. يمكنك حفظ هذا التقرير أو إرساله عبر الواتساب.</span>
+            </div>
+            
+            <a href="#" id="whatsapp-btn" class="whatsapp-btn">
+                <i class="fab fa-whatsapp"></i> إرسال التقرير عبر واتساب
+            </a>
+            
+            <button type="button" id="new-calculation" class="btn btn-block btn-secondary">
+                <i class="fas fa-redo"></i> إجراء حساب جديد
+            </button>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2025 حاسبة المستحقات العمالية - تم التطوير وفقاً لقانون العمل اليمني من قبل المحامي أحمد فؤاد الشرعبي</p>
+        <p>الإصدار 1.1.0</p>
+    </footer>
+
+    <script>
+        // إعدادات الإصدار
+        const APP_VERSION = "1.1.0";
+        const VERSION_HISTORY = {
+            "1.0.0": "الإصدار الأولي - الحساب الأساسي للمستحقات",
+            "1.1.0": "إضافة نظام العملات المتعددة - تحسين دقة الحسابات - إضافة خيارات العمل الإضافي"
+        };
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const calculateBtn = document.getElementById('calculate-btn');
+            const newCalculationBtn = document.getElementById('new-calculation');
+            const whatsappBtn = document.getElementById('whatsapp-btn');
+            const inputSection = document.getElementById('input-section');
+            const resultSection = document.getElementById('result-section');
+            const progressBar = document.getElementById('progress-bar');
+            const currencyButtons = document.querySelectorAll('.currency-btn');
+            const terminationReasonGroup = document.getElementById('termination-reason-group');
+            const endReasonSelect = document.getElementById('end-reason');
+            
+            let currentCurrency = 'YER';
+            const currencySymbols = {
+                'YER': 'ريال يمني',
+                'SAR': 'ريال سعودي',
+                'USD': 'دولار أمريكي'
+            };
+            
+            // عرض معلومات الإصدار في الكونسول
+            console.log(`%cحاسبة المستحقات العمالية - الإصدار ${APP_VERSION}`, "color: #3498db; font-size: 16px; font-weight: bold;");
+            console.log(`%c${VERSION_HISTORY[APP_VERSION]}`, "color: #2c3e50;");
+            
+            // تحديث شريط التقدم عند التمرير
+            window.addEventListener('scroll', updateProgressBar);
+            
+            function updateProgressBar() {
+                const windowHeight = window.innerHeight;
+                const documentHeight = document.documentElement.scrollHeight - windowHeight;
+                const scrollPosition = window.scrollY;
+                const progress = (scrollPosition / documentHeight) * 100;
+                progressBar.style.width = progress + '%';
+            }
+            
+            // تبديل عرض الأقسام
+            window.toggleSection = function(sectionId) {
+                const section = document.getElementById(sectionId);
+                const toggle = section.previousElementSibling;
+                const icon = toggle.querySelector('i');
+                
+                if (section.style.display === 'block') {
+                    section.style.display = 'none';
+                    icon.className = 'fas fa-chevron-down';
+                } else {
+                    section.style.display = 'block';
+                    icon.className = 'fas fa-chevron-up';
+                }
+            };
+            
+            // إظهار/إخفاء حقل سبب الفصل
+            endReasonSelect.addEventListener('change', function() {
+                if (this.value === 'employer_termination') {
+                    terminationReasonGroup.style.display = 'block';
+                } else {
+                    terminationReasonGroup.style.display = 'none';
+                }
+            });
+            
+            // تغيير العملة
+            currencyButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    currencyButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    currentCurrency = this.getAttribute('data-currency');
+                    const currencyLabels = document.querySelectorAll('.currency-label');
+                    currencyLabels.forEach(label => {
+                        label.textContent = currencySymbols[currentCurrency];
+                    });
+                });
+            });
+            
+            calculateBtn.addEventListener('click', function() {
+                // الحصول على القيم من النموذج
+                const fullname = document.getElementById('fullname').value;
+                const phone = document.getElementById('phone').value;
+                const email = document.getElementById('email').value;
+                const company = document.getElementById('company').value;
+                const salary = parseFloat(document.getElementById('salary').value);
+                const housing = parseFloat(document.getElementById('housing').value) || 0;
+                const transport = parseFloat(document.getElementById('transport').value) || 0;
+                const otherAllowances = parseFloat(document.getElementById('other-allowances').value) || 0;
+                
+                // حساب إجمالي الراتب
+                const totalSalary = salary + housing + transport + otherAllowances;
+                
+                // حساب مدة الخدمة
+                const startDate = new Date(document.getElementById('start-date').value);
+                const endDate = new Date(document.getElementById('end-date').value);
+                const diffTime = Math.abs(endDate - startDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                const years = Math.floor(diffDays / 365);
+                const months = Math.floor((diffDays % 365) / 30);
+                
+                const endReason = document.getElementById('end-reason').value;
+                const terminationReason = document.getElementById('termination-reason').value;
+                
+                // حساب الحقوق وفق القانون اليمني
+                
+                // 1. مكافأة نهاية الخدمة (حسب القانون اليمني)
+                let reward = 0;
+                if (endReason === 'resign') {
+                    // الاستقالة: لا توجد مكافأة إلا إذا كانت مدة الخدمة أكثر من 5 سنوات
+                    if (years >= 5) {
+                        // نصف شهر عن كل سنة من السنوات الخمس الأولى + شهر كامل عن كل سنة تالية
+                        const firstFiveYears = Math.min(years, 5);
+                        const remainingYears = Math.max(years - 5, 0);
+                        reward = (firstFiveYears * totalSalary / 2) + (remainingYears * totalSalary);
+                    }
+                } else if (['employer_termination', 'employer_economic', 'contract_end', 'retirement', 'disability'].includes(endReason)) {
+                    // إنهاء الخدمة من قبل صاحب العمل أو لأسباب مشروعة
+                    if (years < 5) {
+                        // نصف شهر عن كل سنة
+                        reward = years * totalSalary / 2;
+                    } else {
+                        // نصف شهر عن كل سنة من السنوات الخمس الأولى + شهر كامل عن كل سنة تالية
+                        const firstFiveYears = 5;
+                        const remainingYears = years - 5;
+                        reward = (firstFiveYears * totalSalary / 2) + (remainingYears * totalSalary);
+                    }
+                }
+                
+                // 2. بدل الإجازة السنوية
+                const vacationBalance = parseFloat(document.getElementById('vacation-balance').value) || 0;
+                const vacationAmount = (totalSalary / 30) * vacationBalance;
+                
+                // 3. أجر مهلة الإخطار
+                const noticePeriod = document.getElementById('notice-period').value;
+                let noticeAmount = 0;
+                if (noticePeriod === 'no' && ['employer_termination', 'employer_economic'].includes(endReason)) {
+                    noticeAmount = totalSalary;
+                } else if (noticePeriod === 'partial') {
+                    noticeAmount = totalSalary * 0.5;
+                }
+                
+                // 4. مقابل العمل الإضافي (بنسب مختلفة حسب نوع اليوم)
+                const normalOvertime = parseFloat(document.getElementById('normal-overtime').value) || 0;
+                const holidayOvertime = parseFloat(document.getElementById('holiday-overtime').value) || 0;
+                const hourlyRate = totalSalary / 30 / 8;
+                const normalOvertimeAmount = normalOvertime * hourlyRate * 1.5; // 150% للأيام العادية
+                const holidayOvertimeAmount = holidayOvertime * hourlyRate * 2; // 200% لأيام العطلات
+                const overtimeAmount = normalOvertimeAmount + holidayOvertimeAmount;
+                
+                // 5. الرواتب المتأخرة
+                const unpaidSalary = parseFloat(document.getElementById('unpaid-salary').value) || 0;
+                
+                // 6. تعويض الفصل التعسفي (فقط في حالة الفصل غير المبرر)
+                let compensationAmount = 0;
+                if (endReason === 'employer_termination' && terminationReason === 'unjustified') {
+                    compensationAmount = totalSalary * 2; // تعويض شهرين كحد أدنى
+                }
+                
+                // إجمالي المستحقات
+                const totalBenefits = reward + vacationAmount + noticeAmount + overtimeAmount + unpaidSalary + compensationAmount;
+                
+                // الخصومات
+                const loans = parseFloat(document.getElementById('loans').value) || 0;
+                const penalties = parseFloat(document.getElementById('penalties').value) || 0;
+                const totalDeductions = loans + penalties;
+                
+                // صافي المبلغ المستحق
+                const netAmount = totalBenefits - totalDeductions;
+                
+                // عرض النتائج
+                document.getElementById('reward-amount').textContent = reward.toFixed(2) + ' ' + currencySymbols[currentCurrency];
+                document.getElementById('vacation-amount').textContent = vacationAmount.toFixed(2) + ' ' + currencySymbols[currentCurrency];
+                document.getElementById('notice-amount').textContent = noticeAmount.toFixed(2) + ' ' + currencySymbols[currentCurrency];
+                document.getElementById('normal-overtime-amount').textContent = normalOvertimeAmount.toFixed(2) + ' ' + currencySymbols[currentCurrency];
+                document.getElementById('holiday-overtime-amount').textContent = holidayOvertimeAmount.toFixed(2) + ' ' + currencySymbols[currentCurrency];
+                document.getElementById('unpaid-amount').textContent = unpaidSalary.toFixed(2) + ' ' + currencySymbols[currentCurrency];
+                document.getElementById('compensation-amount').textContent = compensationAmount.toFixed(2) + ' ' + currencySymbols[currentCurrency];
+                document.getElementById('total-amount').textContent = totalBenefits.toFixed(2) + ' ' + currencySymbols[currentCurrency];
+                document.getElementById('deductions-amount').textContent = totalDeductions.toFixed(2) + ' ' + currencySymbols[currentCurrency];
+                document.getElementById('net-amount').textContent = netAmount.toFixed(2) + ' ' + currencySymbols[currentCurrency];
+                
+                // إعداد رابط الواتساب
+                const whatsappText = `تقرير المستحقات العمالية%0A%0Aالاسم: ${fullname}%0Aرقم الهاتف: ${phone}%0الراتب الأساسي: ${salary} ${currencySymbols[currentCurrency]}%0إجمالي الراتب: ${totalSalary.toFixed(2)} ${currencySymbols[currentCurrency]}%0مدة الخدمة: ${years} سنوات و ${months} شهر%0سبب إنهاء الخدمة: ${document.getElementById('end-reason').options[document.getElementById('end-reason').selectedIndex].text}%0A%0Aالمستحقات:%0مكافأة نهاية الخدمة: ${reward.toFixed(2)} ${currencySymbols[currentCurrency]}%0بدل الإجازة: ${vacationAmount.toFixed(2)} ${currencySymbols[currentCurrency]}%0أجر الإشعار: ${noticeAmount.toFixed(2)} ${currencySymbols[currentCurrency]}%0مقابل العمل الإضافي (أيام عادية): ${normalOvertimeAmount.toFixed(2)} ${currencySymbols[currentCurrency]}%0مقابل العمل الإضافي (عطلات): ${holidayOvertimeAmount.toFixed(2)} ${currencySymbols[currentCurrency]}%0الرواتب المتأخرة: ${unpaidSalary.toFixed(2)} ${currencySymbols[currentCurrency]}%0تعويض الفصل التعسفي: ${compensationAmount.toFixed(2)} ${currencySymbols[currentCurrency]}%0إجمالي المستحقات: ${totalBenefits.toFixed(2)} ${currencySymbols[currentCurrency]}%0إجمالي الخصومات: ${totalDeductions.toFixed(2)} ${currencySymbols[currentCurrency]}%0صافي المبلغ المستحق: ${netAmount.toFixed(2)} ${currencySymbols[currentCurrency]}`;
+                whatsappBtn.href = `https://wa.me/?text=${whatsappText}`;
+                
+                // إظهار قسم النتائج وإخفاء قسم الإدخال
+                inputSection.style.display = 'none';
+                resultSection.style.display = 'block';
+                
+                // التمرير إلى الأعلى
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+            
+            newCalculationBtn.addEventListener('click', function() {
+                // إعادة عرض قسم الإدخال وإخفاء قسم النتائج
+                resultSection.style.display = 'none';
+                inputSection.style.display = 'block';
+                
+                // التمرير إلى الأعلى
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
